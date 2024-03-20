@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.SecondaryTable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,20 +30,20 @@ public class JwtService implements UserDetailsService {
 
 
     public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
-        String userName=jwtRequest.getUserName();
+        String userName=jwtRequest.getUserEmail().toLowerCase();
         String userPassword= jwtRequest.getUserPassword();
         authenticate(userName,userPassword);
         final UserDetails userDetails=loadUserByUsername(userName);
         String newGeneratedToken=jwtUtil.generateToken(userDetails);
-        User user=userRepository.findById(userName).get();
-        System.out.println(user);
+
+        User user=userRepository.findById(userName).orElseThrow(()->new RuntimeException("Incorrect Email"));
         return new JwtResponse(user,newGeneratedToken);
 
 
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userRepository.findById(username).get();
+        User user=userRepository.findById(username).orElseThrow(()->new RuntimeException("Incorrect Email"));
         if (user!=null){
             return new org.springframework.security.core.userdetails.User(
                     user.getUserName(),
@@ -64,13 +63,13 @@ public class JwtService implements UserDetailsService {
         return authorities;
     }
 
-    private void authenticate(String userName,String userPassword) throws Exception {
+    private void authenticate(String userName,String userPassword) throws RuntimeException {
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName,userPassword));
         }catch (DisabledException e){
-            throw new Exception("user is disabled");
+            throw new RuntimeException("user is disabled");
         }catch (BadCredentialsException e){
-            throw new Exception("Bad credential from user");
+            throw new RuntimeException("Bad credential from user");
         }
 
 
