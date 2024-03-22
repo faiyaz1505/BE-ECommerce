@@ -1,8 +1,11 @@
 package com.example.controllers;
 
+import com.example.dto.UserRegisterRequest;
 import com.example.entities.User;
 import com.example.services.UserService;
+import com.example.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,13 +17,14 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping("/registerNewUser")
-    public User registerNewUser(@RequestBody User user){
+    public User registerNewUser(@RequestBody UserRegisterRequest user)throws Exception{
         return userService.registerNewUser(user);
     }
 
     @PreAuthorize("hasRole('User')")
     @GetMapping("/forUser")
     public String forUser(){
+
         return "for user";
     }
 
