@@ -5,7 +5,11 @@ import com.example.dto.UserRegisterRequest;
 import com.example.entities.Role;
 import com.example.entities.User;
 import com.example.repositories.UserRepository;
+import com.example.util.ResponseUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +24,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerNewUser(UserRegisterRequest user)throws Exception{
+    public  ResponseEntity<Object> registerNewUser(UserRegisterRequest user)throws Exception{
         Optional userObject=
                 userRepository.findById(user.getUserEmail());
         if(userObject.isPresent()){
@@ -36,7 +40,9 @@ public class UserService {
         role.add(new Role("User","It is a user role"));
         user1.setRole(role);
         user1.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-        return userRepository.save(user1);
+        userRepository.save(user1);
+        ResponseEntity<Object> response = ResponseUtil.getResponse(user, HttpStatus.CREATED,"user is saved","true" );
+        return response;
     }
     
     public User getUser(String userId) {
