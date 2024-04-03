@@ -2,23 +2,18 @@ package com.lti.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.lti.entities.Product;
-import com.lti.repositories.IProductRepository;
-import com.lti.repositories.UserRepository;
+import com.lti.repositories.ProductRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProductService {
 	
 	@Autowired
-    private IProductRepository productDao;
+    private ProductRepository productDao;
 
 
 

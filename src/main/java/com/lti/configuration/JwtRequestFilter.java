@@ -24,6 +24,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
     @Autowired
     private JwtService jwtService;
+
+    public static String CURRENT_USER ="";
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -37,6 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken=header.substring(7);
             try {
                 userName=jwtUtil.getUserNameFromToken(jwtToken);
+                CURRENT_USER =userName;
             }catch (IllegalArgumentException e){
                 System.out.println("Unable to get jwt token");
                 throw new RuntimeException("Unable to get jwt token");

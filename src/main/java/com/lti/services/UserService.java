@@ -52,8 +52,6 @@ public class UserService {
     public User initRoleAndUser() throws Exception {
 		Role role1 = new Role("admin", "Admin Roles ");
 		
-
-		
 		User user = new User();
 		user.setUserFirstName("admin");
 		user.setUserLastName("bhai");
