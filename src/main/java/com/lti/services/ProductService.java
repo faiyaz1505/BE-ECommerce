@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.lti.entities.Product;
 import com.lti.repositories.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,5 +44,17 @@ public class ProductService {
     	 return product;
     	
     }
+
+	public List<Product> getProductDetails(boolean isSingleProductCheckout,Integer productId){
+		if (isSingleProductCheckout){
+			List<Product> list=new ArrayList<>();
+			Product product=productDao.findById(productId).get();
+			list.add(product);
+			return list;
+		}else {
+
+		}
+		return new ArrayList<>();
+	}
 
 }

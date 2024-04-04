@@ -74,12 +74,19 @@ public class ProductController {
 //    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/deleteProduct/{productId}")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<String> deleteProductWithId(@PathVariable Integer productId){
-    	
-    	 String delete = productService.deleteByProductId(productId);
-    	 
-    	 return new ResponseEntity<String>(delete,HttpStatus.OK);
-    	
+    public ResponseEntity<String> deleteProductWithId(@PathVariable Integer productId) {
+
+        String delete = productService.deleteByProductId(productId);
+
+        return new ResponseEntity<String>(delete, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/getProductDetails/{isSingleProductCheckout}/{productId}")
+    @PreAuthorize("hasRole('User')")
+    public List<Product> getProductDetails(@PathVariable(name = "isSingleProductCheckout") boolean isSingleProductCheckout,
+                                  @PathVariable(name = "productId") Integer productId){
+        return productService.getProductDetails(isSingleProductCheckout,productId);
     }
 
 }
