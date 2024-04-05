@@ -46,6 +46,7 @@ public class ProductService {
     }
 
 	public List<Product> getProductDetails(boolean isSingleProductCheckout,Integer productId){
+		System.out.println("get Product details");
 		if (isSingleProductCheckout){
 			List<Product> list=new ArrayList<>();
 			Product product=productDao.findById(productId).get();

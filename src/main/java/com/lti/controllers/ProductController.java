@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/product")
 public class ProductController {
 	
@@ -86,6 +86,7 @@ public class ProductController {
     @PreAuthorize("hasRole('User')")
     public List<Product> getProductDetails(@PathVariable(name = "isSingleProductCheckout") boolean isSingleProductCheckout,
                                   @PathVariable(name = "productId") Integer productId){
+        System.out.println("checkout ");
         return productService.getProductDetails(isSingleProductCheckout,productId);
     }
 
