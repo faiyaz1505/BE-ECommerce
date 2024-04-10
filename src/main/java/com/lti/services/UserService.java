@@ -37,7 +37,7 @@ public class UserService {
         user1.setUserMobileNo(user.getUserMobileNo());
         user1.setUserCity(user.getUserCity());
         Set<Role> role=new HashSet<>();
-        role.add(new Role("User","It is a user role"));
+        role.add(new Role("user","It is a user role"));
         user1.setRole(role);
         user1.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         userRepository.save(user1);
