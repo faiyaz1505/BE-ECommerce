@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderDetailService {
@@ -44,5 +45,12 @@ public class OrderDetailService {
                     );
             orderDetailRepository.save(orderDetail);
         }
+    }
+
+
+    public List<OrderDetail> getOrderDetails(){
+        String username=JwtRequestFilter.CURRENT_USER;
+        User user=userRepository.findById(username).get();
+        return orderDetailRepository.findByUser(user);
     }
 }
