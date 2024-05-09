@@ -9,6 +9,7 @@ import com.lti.entities.User;
 import com.lti.repositories.OrderDetailRepository;
 import com.lti.repositories.ProductRepository;
 import com.lti.repositories.UserRepository;
+import com.lti.util.UpdateQuantity;
 import org.apache.tomcat.jni.Proc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderDetailService {
+
+    @Autowired
+    private UpdateQuantity updateQuantity;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -44,6 +48,7 @@ public class OrderDetailService {
                     user
                     );
             orderDetailRepository.save(orderDetail);
+            updateQuantity.updateOrderQuantity(o.getProductId(),o.getQuantity());
         }
     }
 

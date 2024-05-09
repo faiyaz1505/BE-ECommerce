@@ -9,6 +9,7 @@ import com.lti.repositories.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -56,6 +57,16 @@ public class ProductService {
 
 		}
 		return new ArrayList<>();
+	}
+
+	public List<Product> getProductAvailableStockAsZero(){
+		return productDao.findAll().stream().filter(p->p.getAvailableStock()!=null && p.getAvailableStock()<=0).collect(Collectors.toList());
+	}
+
+	public Product updateAvailableStock(Product product){
+		Product product1=productDao.findById(product.getProductId()).get();
+		product1.setAvailableStock(product.getAvailableStock());
+		return productDao.save(product1);
 	}
 
 }

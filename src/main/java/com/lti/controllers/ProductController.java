@@ -90,4 +90,16 @@ public class ProductController {
         return productService.getProductDetails(isSingleProductCheckout,productId);
     }
 
+    @GetMapping("/notAvailableStock")
+    @PreAuthorize("hasRole('admin')")
+    public List<Product> getProductWhereQtyIsZero(){
+        return productService.getProductAvailableStockAsZero();
+    }
+
+    @PutMapping("/updateAvailableStock")
+    @PreAuthorize("hasRole('admin')")
+    public Product updateAvailableStock(@RequestBody Product product){
+        return productService.updateAvailableStock(product);
+    }
+
 }
