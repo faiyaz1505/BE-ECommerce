@@ -14,6 +14,7 @@ import org.apache.tomcat.jni.Proc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,5 +58,22 @@ public class OrderDetailService {
         String username=JwtRequestFilter.CURRENT_USER;
         User user=userRepository.findById(username).get();
         return orderDetailRepository.findByUser(user);
+    }
+
+    public List<OrderDetail> getAllOrderDetails(){
+        List<OrderDetail> orderDetails=new ArrayList<>();
+        orderDetailRepository.findAll().forEach(
+                x->orderDetails.add(x)
+        );
+        return orderDetails;
+    }
+
+
+    public void markAsDelivered(Integer orderId) {
+        OrderDetail orderDetail=orderDetailRepository.findById(orderId).get();
+        if (orderDetail!=null){
+            orderDetail.setOrderStatus("Delivered");
+            orderDetailRepository.save(orderDetail);
+        }
     }
 }

@@ -29,4 +29,16 @@ public class OrderDetailController {
     public List<OrderDetail> getOrders(){
         return orderDetailService.getOrderDetails();
     }
+
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping("/allOrdersDetails")
+    public List<OrderDetail> getAllOrdersDetails(){
+        return orderDetailService.getAllOrderDetails();
+    }
+
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping("/markAsDelivered/{orderId}")
+    public void markOrderAsDelivered(@PathVariable Integer orderId){
+        orderDetailService.markAsDelivered(orderId);
+    }
 }
