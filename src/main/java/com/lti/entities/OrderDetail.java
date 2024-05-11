@@ -25,9 +25,10 @@ public class OrderDetail {
     @OneToOne
     private User user;
 
-    public OrderDetail(String orderFullName, String orderFullAddress, String orderContactNumber, String orderAlternateContactNumber, String orderStatus, Double orderAmount, Product product, User user) {
+
+    public OrderDetail(String orderFullName, String orderFullOrder, String orderContactNumber, String orderAlternateContactNumber, String orderStatus, Double orderAmount, Product product, User user) {
         this.orderFullName = orderFullName;
-        this.orderFullAddress = orderFullAddress;
+        this.orderFullAddress = orderFullOrder;
         this.orderContactNumber = orderContactNumber;
         this.orderAlternateContactNumber = orderAlternateContactNumber;
         this.orderStatus = orderStatus;

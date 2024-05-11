@@ -16,17 +16,24 @@ public class CartController {
     @Autowired
     CartService cartService;
 
-    @PreAuthorize("hasRole('User')")
-    @GetMapping("/add/{productId}")
-    public Cart addToCart(@PathVariable Integer productId){
-        return cartService.addTocart(productId);
 
+
+    @PreAuthorize("hasRole('User')")
+    @GetMapping({"/{productId}"})
+    public Cart addToCart(@PathVariable(name = "productId") Integer productId) {
+        return cartService.addToCart(productId);
     }
 
     @PreAuthorize("hasRole('User')")
-    @GetMapping("/details")
-    public List<Cart> cartDetailsByUser(){
-        return cartService.getCartDetailsByUser();
+    @DeleteMapping({"/{cartId}"})
+    public void deleteCartItem(@PathVariable(name = "cartId") Integer cartId) {
+        cartService.deleteCartItem(cartId);
+    }
+
+    @PreAuthorize("hasRole('User')")
+    @GetMapping({"/getCartDetails"})
+    public List<Cart> getCartDetails() {
+        return cartService.getCartDetails();
     }
 
 

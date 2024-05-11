@@ -3,9 +3,11 @@ package com.lti.services;
 import com.lti.configuration.JwtRequestFilter;
 import com.lti.dto.OrderInput;
 import com.lti.dto.OrderProductQuantity;
+import com.lti.entities.Cart;
 import com.lti.entities.OrderDetail;
 import com.lti.entities.Product;
 import com.lti.entities.User;
+import com.lti.repositories.CartRepository;
 import com.lti.repositories.OrderDetailRepository;
 import com.lti.repositories.ProductRepository;
 import com.lti.repositories.UserRepository;
@@ -29,28 +31,51 @@ public class OrderDetailService {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
     private static final String ORDER_PLACED="Placed";
 
-    public void placeOrder(OrderInput orderInput){
-        List<OrderProductQuantity> orderProductQuantityList=orderInput.getOrderProductQuantityList();
+    public void placeOrder(OrderInput orderInput, boolean isSingleProductCheckout) {
+        List<OrderProductQuantity> productQuantityList = orderInput.getOrderProductQuantityList();
 
-        for (OrderProductQuantity o:orderProductQuantityList) {
-            Product product=productRepository.findById(o.getProductId()).get();
-            String userName=JwtRequestFilter.CURRENT_USER;
-            User user=userRepository.findById(userName).get();
-            OrderDetail orderDetail=new OrderDetail(
+        for (OrderProductQuantity o: productQuantityList) {
+            Product product = productRepository.findById(o.getProductId()).get();
+
+            String currentUser = JwtRequestFilter.CURRENT_USER;
+            User user = userRepository.findById(currentUser).get();
+
+            OrderDetail orderDetail = new OrderDetail(
                     orderInput.getFullName(),
                     orderInput.getFullAddress(),
                     orderInput.getContactNumber(),
                     orderInput.getAlternateContactNumber(),
                     ORDER_PLACED,
-                    product.getProductDiscountedPrice()*o.getQuantity(),
+                    product.getProductDiscountedPrice() * o.getQuantity(),
                     product,
                     user
-                    );
+
+            );
+
+            // empty the cart.
+            if(!isSingleProductCheckout) {
+                List<Cart> carts = cartRepository.findByUser(user);
+                carts.stream().forEach(x -> cartRepository.deleteById(x.getCartId()));
+            }
+
             orderDetailRepository.save(orderDetail);
             updateQuantity.updateOrderQuantity(o.getProductId(),o.getQuantity());
         }
+    }
+
+    public void markOrderAsDelivered(Integer orderId) {
+        OrderDetail orderDetail = orderDetailRepository.findById(orderId).get();
+
+        if(orderDetail != null) {
+            orderDetail.setOrderStatus("Delivered");
+            orderDetailRepository.save(orderDetail);
+        }
+
     }
 
 

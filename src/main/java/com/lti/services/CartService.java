@@ -12,39 +12,53 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userDao;
 
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository productDao;
 
     @Autowired
-    CartRepository cartRepository;
+    CartRepository cartDao;
 
-    public Cart addTocart(Integer productId){
-
-        String currentUser = JwtRequestFilter.CURRENT_USER;
-       Optional<Product> product=productRepository.findById(productId);
-
-        Optional<User> user = userRepository.findById(currentUser);
-
-        if(product.isPresent() && user.isPresent()){
-            Cart cart=new Cart(user.get(),product.get());
-            return cartRepository.save(cart);
-        }
-        throw new RuntimeException("User or Product is Null");
+    public void deleteCartItem(Integer cartId) {
+        cartDao.deleteById(cartId);
     }
 
-    public List<Cart> getCartDetailsByUser(){
-        String currentUserName=JwtRequestFilter.CURRENT_USER;
+    public Cart addToCart(Integer productId) {
+        Product product = productDao.findById(productId).get();
 
-        User user=userRepository.findById(currentUserName).get();
+        String username = JwtRequestFilter.CURRENT_USER;
 
-        return cartRepository.findByUser(user);
+        User user = null;
+        if(username != null) {
+            user = userDao.findById(username).get();
+        }
+
+        List<Cart> cartList = cartDao.findByUser(user);
+        List<Cart> filteredList = cartList.stream().filter(x -> x.getProduct().getProductId() == productId).collect(Collectors.toList());
+
+        if(filteredList.size() > 0) {
+            return null;
+        }
+
+        if(product != null && user != null) {
+            Cart cart = new Cart(user, product);
+            return cartDao.save(cart);
+        }
+
+        return null;
+    }
+
+    public List<Cart> getCartDetails() {
+        String username = JwtRequestFilter.CURRENT_USER;
+        User user = userDao.findById(username).get();
+        return cartDao.findByUser(user);
     }
 
 
