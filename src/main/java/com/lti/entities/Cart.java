@@ -23,4 +23,13 @@ public class Cart {
     @org.springframework.lang.NonNull
     private Product product;
 
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "cartId=" + cartId +
+                ", user=" + user +
+                ", product=" + product +
+                '}';
+    }
 }

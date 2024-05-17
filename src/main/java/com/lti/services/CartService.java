@@ -1,6 +1,7 @@
 package com.lti.services;
 
 import com.lti.configuration.JwtRequestFilter;
+import com.lti.dto.CheckoutDto;
 import com.lti.entities.Cart;
 import com.lti.entities.Product;
 import com.lti.entities.User;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +60,27 @@ public class CartService {
         User user = userDao.findById(username).get();
         return cartDao.findByUser(user);
     }
+
+    public CheckoutDto checkoutAmount(){
+        String username=JwtRequestFilter.CURRENT_USER;
+        User user = userDao.findById(username).get();
+        List<Cart> cartList= cartDao.findByUser(user);
+        double checkoutDiscountedAmount=0;
+        double checkoutActualAmount=0;
+        Integer checkoutItems=0;
+        for (Cart c:cartList) {
+            checkoutDiscountedAmount+=c.getProduct().getProductDiscountedPrice();
+            checkoutActualAmount+=c.getProduct().getProductActualPrice();
+            checkoutItems+=1;
+        }
+        CheckoutDto checkoutDto=new CheckoutDto();
+        checkoutDto.setDiscountedAmount(checkoutDiscountedAmount);
+        checkoutDto.setSavingAmount(checkoutActualAmount-checkoutDiscountedAmount);
+        checkoutDto.setNumberOfItems(checkoutItems);
+        return checkoutDto;
+    }
+
+
 
 
 

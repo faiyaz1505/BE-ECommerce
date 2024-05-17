@@ -1,5 +1,6 @@
 package com.lti.controllers;
 
+import com.lti.dto.CheckoutDto;
 import com.lti.entities.Cart;
 import com.lti.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class CartController {
         return cartService.getCartDetails();
     }
 
+    @PreAuthorize("hasRole('User')")
+    @GetMapping({"/checkoutAmount"})
+    public CheckoutDto checkoutAmount(){
+        return cartService.checkoutAmount();
+    }
 
 
 }

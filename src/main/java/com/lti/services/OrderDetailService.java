@@ -85,11 +85,18 @@ public class OrderDetailService {
         return orderDetailRepository.findByUser(user);
     }
 
-    public List<OrderDetail> getAllOrderDetails(){
+    public List<OrderDetail> getAllOrderDetails(String status){
         List<OrderDetail> orderDetails=new ArrayList<>();
-        orderDetailRepository.findAll().forEach(
-                x->orderDetails.add(x)
-        );
+        if (status.equalsIgnoreCase("all")){
+            orderDetailRepository.findAll().forEach(
+                    x->orderDetails.add(x)
+            );
+        }else {
+            orderDetailRepository.findByOrderStatus(status).forEach(
+                    x->orderDetails.add(x)
+            );
+        }
+
         return orderDetails;
     }
 
